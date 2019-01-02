@@ -161,6 +161,60 @@ function addToInventory() {
 
 //Function will allow the user to add a new product item
 function addNewProduct() {
-    console.log("add new product");
-    startApp();
+    //Gather the information necessary to add a new product
+    inquirer.prompt([
+        {
+            name: "productName",
+            message: "Enter the product name you'd like to add:",
+            validate: validateValueEntered
+        },
+        {
+            name: "departmentName",
+            message: "Enter the product's department name:",
+            validate: validateValueEntered
+        },
+        {
+            name: "price",
+            message: "Enter the product's price:",
+            validate: function (price) {
+                return (isNaN(price) || parseFloat(price) <= 0) ? false : true;
+            }
+        },
+        {
+            name: "quantity",
+            message: "Enter the product's quantity:",
+            validate: function (quantity) {
+                return (isNaN(quantity) || parseInt(quantity) < 0) ? false : true;
+            }
+        }
+    ]).then(answer => {
+
+        connection.query("Insert Into products Set ?",
+            [
+                {
+                    product_name: answer.productName,
+                    department_name: answer.departmentName,
+                    price: answer.price,
+                    stock_quantity: answer.quantity
+                }
+            ],
+            function (err) {
+                if (err) throw err;
+
+                //Display to the user that the insert was successful
+                console.log();
+                console.log("====================================");
+                console.log(`Successfully added ${answer.productName}!`);
+                console.log("====================================");
+                console.log();
+
+                //Restart the application
+                startApp();
+            });
+    });
+}
+
+//Validate that the value entered in an inquirer prompt is something other than blank
+function validateValueEntered(value) {
+    return (!value || value.trim().length <= 0) ? false : true;
 }
