@@ -1,6 +1,7 @@
 //Require npm packages
-var inquirer = require("inquirer");
-var mysql = require("mysql");
+const inquirer = require("inquirer");
+const mysql = require("mysql");
+const table = require("table");
 require('dotenv').config();
 
 //Create mySQL connection variable
@@ -27,6 +28,7 @@ connection.connect(function (err) {
     console.log("========================================");
     console.log("WELCOME TO THE BAMAZON SUPERVISOR APP!!!");
     console.log("========================================");
+    console.log();
 
     //Start the application
     startApp();
@@ -59,9 +61,72 @@ function startApp() {
     });
 }
 
+//Function that ends the application
+function endApp() {
+    if (connection) {
+        connection.end();
+    }
+}
+
 //Function to display a summarized table of sales by department
 function viewSalesByDepartment() {
 
+    const query = `
+        SELECT 
+            d.department_id, 
+            d.department_name, 
+            d.over_head_costs, 
+            sum(p.product_sales) as product_sales,
+            sum(p.product_sales) - d.over_head_costs as total_profit
+        FROM
+            departments d
+            left join products p
+                on d.department_name = p.department_name
+        GROUP BY d.department_name`;
+
+    connection.query(query,
+        function (err, res) {
+            if (err) throw err;
+
+            //Display sales by department using table npm package
+            console.log();
+
+            let data = [];
+            const tableHeaderData = [];
+            const tableRowData = [];
+
+            //Loop through the results
+            res.forEach((department, index) => {
+                
+                const departmentArray = [];
+
+                for (let key in department) {
+                    //If index is 0 then add the column names to the header data array
+                    if (index === 0) {
+                        tableHeaderData.push(key);
+                    }
+
+                    //Add data to department array
+                    departmentArray.push(department[key]);
+                }
+
+                //Add the department data array to the row data array
+                tableRowData.push(departmentArray);
+            })
+
+            //Add the header array to the data array
+            data.push(tableHeaderData);
+            //Concat the row data array to the data array
+            data = data.concat(tableRowData);
+            
+            //Build the output using the table npm package
+            const output = table.table(data);
+            //Console log the output table
+            console.log(output);
+
+            //Restart the application
+            startApp();
+        });
 }
 
 //Function to create a new department
