@@ -12,3 +12,11 @@ VALUES
     ('Picture Frame', 'Home Goods', '13.29', 12),
     ('Winter Boots', 'Shoe', '299.98', 7),
     ('Cool T-Shirt', 'Clothing', '23.23', 149)
+
+INSERT INTO departments (department_name, over_head_costs)
+VALUES 
+    ('Electronics', '100000.00'),
+    ('Home Goods', '2353.22'),
+    ('Clothing', '3333.33'),
+    ('Shoe', '4444.44'),
+    ('Produce', '5555.55')
