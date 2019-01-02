@@ -73,21 +73,94 @@ function endApp() {
 }
 
 //Function that will display all products for sale
-function viewProducts() {
+function viewProducts(onlyLowInventory) {
 
+    const query = onlyLowInventory ?
+        "Select * From products Where stock_quantity < 5" :
+        "Select * From products"
+
+    connection.query(query,
+        function (err, res) {
+            if (err) throw err;
+
+            //Display items for sale
+            console.log();
+            console.log("====================================");
+            res.forEach((item) => {
+                console.log(`${item.product_name} (Item ID: ${item.item_id}, Quantity: ${item.stock_quantity}, Price: ${item.price})`);
+            });
+            console.log("====================================");
+            console.log();
+
+            //Restart the application
+            startApp();
+        });
 }
 
 //Function that will list all items with an inventory count lower than the specified amount
 function viewLowInventory() {
-
+    viewProducts(true);
 }
 
 //Function will display a prompt that will let the user add more quantity of any item
 function addToInventory() {
 
+    connection.query("Select * From products",
+        function (err, res) {
+            if (err) throw err;
+
+            const itemsForSale = [];
+
+            //Build the list of products to display in the inquirer prompt
+            res.forEach((item) => {
+                itemsForSale.push({
+                    name: item.product_name,
+                    value: item.item_id
+                });
+            });
+
+            inquirer.prompt([
+                {
+                    type: "rawlist",
+                    name: "itemToAddInventory",
+                    message: "Select an item to add inventory to:",
+                    choices: itemsForSale
+                },
+                {
+                    name: "quantityToAdd",
+                    message: "How many of the item would you like to add?",
+                    validate: function (quantityToAdd) {
+                        if (isNaN(quantityToAdd) || parseInt(quantityToAdd) <= 0) {
+                            return "Please enter a valid positive number";
+                        } else {
+                            return true;
+                        }
+                    }
+                }
+            ]).then(answer => {
+                connection.query("Update products Set stock_quantity = (stock_quantity + ?) Where item_id = ?",
+                    [answer.quantityToAdd, answer.itemToAddInventory],
+                    function (err) {
+                        if (err) throw err;
+
+                        var itemToAddTo = res.find((item) => item.item_id == answer.itemToAddInventory);
+
+                        //Display to the user that the update was successful
+                        console.log();
+                        console.log("====================================");
+                        console.log(`Successfully added ${answer.quantityToAdd} to ${itemToAddTo.product_name} quantity!`);
+                        console.log("====================================");
+                        console.log();
+
+                        //Restart the application
+                        startApp();
+                    });
+            });
+        });
 }
 
 //Function will allow the user to add a new product item
 function addNewProduct() {
-
+    console.log("add new product");
+    startApp();
 }
