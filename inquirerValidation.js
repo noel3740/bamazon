@@ -5,12 +5,12 @@ function validateValue(value) {
 
 //Function will validate a money value entered in inquirer
 function validatePositiveMoney(value) {
-    return (isNaN(value) || parseFloat(value) <= 0) ? false : true;
+    return (!validateValue(value) || isNaN(value) || parseFloat(value) <= 0) ? false : true;
 }
 
 //Function will validate an integer
 function validatePositiveInt(value) {
-    return (isNaN(value) || parseInt(value) < 0) ? false : true;
+    return (!validateValue(value) || isNaN(value) || parseInt(value) < 0) ? false : true;
 }
 
 //Export the functions
