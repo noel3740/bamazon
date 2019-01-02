@@ -106,13 +106,24 @@ function buyAnItem() {
 
 //Function that fulfills the customers order to purchase an item
 function fulfillItemOrder(itemToBuy, quantityToBuy) {
-    //Update the products table to reflect remaining quantity
-    connection.query("Update products Set stock_quantity = (stock_quantity - ?) Where item_id = ?",
-        [quantityToBuy, itemToBuy.item_id],
+    //Calculate total cost
+    var totalCost = parseFloat(itemToBuy.price) * parseInt(quantityToBuy);
+    
+    //Update the products table to reflect remaining quantity and product sales
+    connection.query("Update products Set ? Where ?",
+        [
+            {
+                stock_quantity: (parseInt(itemToBuy.stock_quantity) - parseInt(quantityToBuy)),
+                product_sales: (parseFloat(itemToBuy.product_sales) + parseFloat(totalCost))
+            }, 
+            {
+                item_id: itemToBuy.item_id
+            }
+        ],
         function (err, res) {
             if (err) throw err;
             //Show the user the total cost of their purchase
-            var totalCost = parseFloat(itemToBuy.price) * parseInt(quantityToBuy);
+            
             console.log(`Total Cost of Purchase: $${totalCost}`);
 
             //End the application
