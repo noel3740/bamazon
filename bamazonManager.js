@@ -3,6 +3,9 @@ var inquirer = require("inquirer");
 var mysql = require("mysql");
 require('dotenv').config();
 
+//Require local javascript
+var validator = require("./inquirerValidation.js");
+
 //Create mySQL connection variable
 var connection = mysql.createConnection({
     host: "localhost",
@@ -166,34 +169,30 @@ function addNewProduct() {
         {
             name: "productName",
             message: "Enter the product name you'd like to add:",
-            validate: validateValueEntered
+            validate: validator.validateValue
         },
         {
             name: "departmentName",
             message: "Enter the product's department name:",
-            validate: validateValueEntered
+            validate: validator.validateValue
         },
         {
             name: "price",
             message: "Enter the product's price:",
-            validate: function (price) {
-                return (isNaN(price) || parseFloat(price) <= 0) ? false : true;
-            }
+            validate: validator.validatePositiveMoney
         },
         {
             name: "quantity",
             message: "Enter the product's quantity:",
-            validate: function (quantity) {
-                return (isNaN(quantity) || parseInt(quantity) < 0) ? false : true;
-            }
+            validate: validator.validatePositiveInt
         }
     ]).then(answer => {
 
         connection.query("Insert Into products Set ?",
             [
                 {
-                    product_name: answer.productName,
-                    department_name: answer.departmentName,
+                    product_name: answer.productName.trim(),
+                    department_name: answer.departmentName.trim(),
                     price: answer.price,
                     stock_quantity: answer.quantity
                 }
@@ -212,9 +211,4 @@ function addNewProduct() {
                 startApp();
             });
     });
-}
-
-//Validate that the value entered in an inquirer prompt is something other than blank
-function validateValueEntered(value) {
-    return (!value || value.trim().length <= 0) ? false : true;
 }
