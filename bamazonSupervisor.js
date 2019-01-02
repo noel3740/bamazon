@@ -4,6 +4,9 @@ const mysql = require("mysql");
 const table = require("table");
 require('dotenv').config();
 
+//Require local javascript
+var validator = require("./inquirerValidation.js");
+
 //Create mySQL connection variable
 var connection = mysql.createConnection({
     host: "localhost",
@@ -76,8 +79,8 @@ function viewSalesByDepartment() {
             d.department_id, 
             d.department_name, 
             d.over_head_costs, 
-            sum(p.product_sales) as product_sales,
-            sum(p.product_sales) - d.over_head_costs as total_profit
+            IFNULL(sum(p.product_sales), 0) as product_sales,
+            IFNULL(sum(p.product_sales), 0) - IFNULL(d.over_head_costs, 0) as total_profit
         FROM
             departments d
             left join products p
@@ -97,7 +100,7 @@ function viewSalesByDepartment() {
 
             //Loop through the results
             res.forEach((department, index) => {
-                
+
                 const departmentArray = [];
 
                 for (let key in department) {
@@ -118,7 +121,7 @@ function viewSalesByDepartment() {
             data.push(tableHeaderData);
             //Concat the row data array to the data array
             data = data.concat(tableRowData);
-            
+
             //Build the output using the table npm package
             const output = table.table(data);
             //Console log the output table
@@ -131,5 +134,57 @@ function viewSalesByDepartment() {
 
 //Function to create a new department
 function createNewDepartment() {
+    //Gather the information necessary to add a new department
+    inquirer.prompt([
+        {
+            name: "departmentName",
+            message: "Enter the department name to add:",
+            validate: function (departmentName) {
+                if (!validator.validateValue(departmentName)) {
+                    return false;
+                } else {
+                    //Check if department already exists
+                    connection.query("Select count(1) as department_count From departments Where department_name = ?",
+                        departmentName,
+                        function (err, res) {
+                            if (err) return err;
 
+                            //If department already exists then prompt the user to enter a different department name
+                            if (res && res.length > 0 && parseInt(res[0].department_count) > 0) {
+                                return "Department already exists! Please enter another department name.";
+                            } else {
+                                return true;
+                            }
+                        });
+                }
+            }
+        },
+        {
+            name: "overHeadCosts",
+            message: "Enter the department's over head costs:",
+            validate: validator.validatePositiveMoney
+        }
+    ]).then(answer => {
+        //Run the query to inser the department into the db
+        connection.query("Insert Into departments Set ?",
+            [
+                {
+                    department_name: answer.departmentName,
+                    over_head_costs: answer.overHeadCosts
+                }
+            ],
+            function (err) {
+                if (err) throw err;
+
+                //Display to the user that the insert was successful
+                console.log();
+                console.log("====================================");
+                console.log(`Successfully added the "${answer.departmentName}" department!`);
+                console.log("====================================");
+                console.log();
+
+                //Restart the application
+                startApp();
+            });
+    });
 }
