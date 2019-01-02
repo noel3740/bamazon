@@ -1,3 +1,5 @@
+USE bamazon;
+
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES 
     ('Asus Gaming Montior', 'Electronics', '300.00', 12),
