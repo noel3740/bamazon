@@ -17,4 +17,3 @@ function validatePositiveInt(value) {
 module.exports.validateValue = validateValue;
 module.exports.validatePositiveMoney = validatePositiveMoney;
 module.exports.validatePositiveInt = validatePositiveInt;
-
