@@ -3,6 +3,9 @@ var inquirer = require("inquirer");
 var mysql = require("mysql");
 require('dotenv').config();
 
+//Require local javascript
+var validator = require("./inquirerValidation.js");
+
 //Create mySQL connection variable
 var connection = mysql.createConnection({
     host: "localhost",
@@ -69,25 +72,21 @@ function buyAnItem() {
             //Prompt user to select an item to buy
             inquirer.prompt([
                 {
-                    type: "rawlist",
-                    name: "itemToBuy",
-                    message: "Select an item to buy:",
-                    choices: itemsForSale
+                    name: "itemToBuyID",
+                    message: "Enter the Item ID to buy:",
+                    validate: function (itemToBuyID) {
+                        var itemToBuy = res.find((item) => item.item_id == itemToBuyID);
+                        return itemToBuy ? true : "Please enter a valid item id";
+                    }
                 },
                 {
                     name: "quantityToBuy",
                     message: "How many of the item would you like to buy?",
-                    validate: function (quantityToBuy) {
-                        if (isNaN(quantityToBuy) || parseInt(quantityToBuy) <= 0) {
-                            return "Please enter a valid positive number";
-                        } else {
-                            return true;
-                        }
-                    }
+                    validate: validator.validatePositiveInt
                 }
             ]).then(answer => {
 
-                var itemToBuy = res.find((item) => item.item_id == answer.itemToBuy);
+                var itemToBuy = res.find((item) => item.item_id == answer.itemToBuyID);
 
                 //If there is enough quantity of the item the fulfill the user's order
                 if (parseInt(itemToBuy.stock_quantity) >= parseInt(answer.quantityToBuy)) {
