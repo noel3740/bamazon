@@ -10,7 +10,7 @@ function validatePositiveMoney(value) {
 
 //Function will validate an integer
 function validatePositiveInt(value) {
-    return (!validateValue(value) || isNaN(value) || parseInt(value) < 0) ? false : true;
+    return (!validateValue(value) || isNaN(value) || parseInt(value) <= 0) ? false : true;
 }
 
 //Export the functions
