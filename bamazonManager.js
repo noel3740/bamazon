@@ -79,8 +79,8 @@ function endApp() {
 function viewProducts(onlyLowInventory) {
 
     const query = onlyLowInventory ?
-        "Select * From products Where stock_quantity < 5" :
-        "Select * From products"
+        "Select * From products Where stock_quantity < 5 Order By product_name" :
+        "Select * From products Order By product_name"
 
     connection.query(query,
         function (err, res) {

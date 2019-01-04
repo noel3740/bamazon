@@ -46,7 +46,7 @@ function endApp() {
 //Then prompts the user to select an item to buy and how many.
 function buyAnItem() {
     //Get all products where the stock quantity is greater than 0
-    connection.query("Select * From products Where stock_quantity > 0",
+    connection.query("Select * From products Where stock_quantity > 0 Order By product_name",
         function (err, res) {
             if (err) throw err;
 
