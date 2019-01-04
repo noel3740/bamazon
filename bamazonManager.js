@@ -27,9 +27,9 @@ connection.connect(function (err) {
 
     //Display welcome message
     console.log();
-    console.log("=====================================");
-    console.log("WELCOME TO THE BAMAZON MANAGER APP!!!");
-    console.log("=====================================");
+    console.log('\x1b[36m%s\x1b[0m',"=====================================");
+    console.log('\x1b[36m%s\x1b[0m',"WELCOME TO THE BAMAZON MANAGER APP!!!");
+    console.log('\x1b[36m%s\x1b[0m',"=====================================");
 
     //Start the application
     startApp();
@@ -88,11 +88,11 @@ function viewProducts(onlyLowInventory) {
 
             //Display items for sale
             console.log();
-            console.log("====================================");
+            console.log('\x1b[32m%s\x1b[0m',"=================================================================================");
             res.forEach((item) => {
-                console.log(`${item.product_name} (Item ID: ${item.item_id}, Quantity: ${item.stock_quantity}, Price: ${item.price})`);
+                console.log('\x1b[34m%s\x1b[0m',`${item.product_name}`,` (Item ID: ${item.item_id}, Quantity: ${item.stock_quantity}, Price: $${item.price.toLocaleString('en')})`);
             });
-            console.log("====================================");
+            console.log('\x1b[32m%s\x1b[0m',"=================================================================================");
             console.log();
 
             //Restart the application
@@ -150,9 +150,9 @@ function addToInventory() {
 
                         //Display to the user that the update was successful
                         console.log();
-                        console.log("====================================");
-                        console.log(`Successfully added ${answer.quantityToAdd} to ${itemToAddTo.product_name} quantity!`);
-                        console.log("====================================");
+                        console.log('\x1b[32m%s\x1b[0m',"====================================");
+                        console.log('\x1b[32m%s\x1b[0m',`Successfully added ${answer.quantityToAdd} to ${itemToAddTo.product_name} quantity!`);
+                        console.log('\x1b[32m%s\x1b[0m',"====================================");
                         console.log();
 
                         //Restart the application
@@ -202,9 +202,9 @@ function addNewProduct() {
 
                 //Display to the user that the insert was successful
                 console.log();
-                console.log("====================================");
-                console.log(`Successfully added ${answer.productName}!`);
-                console.log("====================================");
+                console.log('\x1b[32m%s\x1b[0m',"====================================");
+                console.log('\x1b[32m%s\x1b[0m',`Successfully added ${answer.productName}!`);
+                console.log('\x1b[32m%s\x1b[0m',"====================================");
                 console.log();
 
                 //Restart the application

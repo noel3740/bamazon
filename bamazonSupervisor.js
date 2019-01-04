@@ -28,9 +28,9 @@ connection.connect(function (err) {
 
     //Display welcome message
     console.log();
-    console.log("========================================");
-    console.log("WELCOME TO THE BAMAZON SUPERVISOR APP!!!");
-    console.log("========================================");
+    console.log('\x1b[36m%s\x1b[0m', "========================================");
+    console.log('\x1b[36m%s\x1b[0m', "WELCOME TO THE BAMAZON SUPERVISOR APP!!!");
+    console.log('\x1b[36m%s\x1b[0m', "========================================");
     console.log();
 
     //Start the application
@@ -125,7 +125,7 @@ function viewSalesByDepartment() {
             //Build the output using the table npm package
             const output = table.table(data);
             //Console log the output table
-            console.log(output);
+            console.log('\x1b[32m%s\x1b[0m', output);
 
             //Restart the application
             startApp();
@@ -139,25 +139,7 @@ function createNewDepartment() {
         {
             name: "departmentName",
             message: "Enter the department name to add:",
-            validate: function (departmentName) {
-                if (!validator.validateValue(departmentName)) {
-                    return false;
-                } else {
-                    //Check if department already exists
-                    connection.query("Select count(1) as department_count From departments Where department_name = ?",
-                        departmentName,
-                        function (err, res) {
-                            if (err) return err;
-
-                            //If department already exists then prompt the user to enter a different department name
-                            if (res && res.length > 0 && parseInt(res[0].department_count) > 0) {
-                                return "Department already exists! Please enter another department name.";
-                            } else {
-                                return true;
-                            }
-                        });
-                }
-            }
+            validate: validator.validateValue
         },
         {
             name: "overHeadCosts",
@@ -165,26 +147,40 @@ function createNewDepartment() {
             validate: validator.validatePositiveMoney
         }
     ]).then(answer => {
-        //Run the query to inser the department into the db
-        connection.query("Insert Into departments Set ?",
-            [
-                {
-                    department_name: answer.departmentName,
-                    over_head_costs: answer.overHeadCosts
-                }
-            ],
-            function (err) {
+        //Check if department already exists
+        connection.query("Select count(1) as department_count From departments Where department_name = ?",
+            answer.departmentName,
+            function (err, res) {
                 if (err) throw err;
 
-                //Display to the user that the insert was successful
-                console.log();
-                console.log("====================================");
-                console.log(`Successfully added the "${answer.departmentName}" department!`);
-                console.log("====================================");
-                console.log();
+                //If department already exists then prompt the user to enter a different department name
+                if (res && res.length > 0 && parseInt(res[0].department_count) > 0) {
+                    console.log('\x1b[31m%s\x1b[0m',"Department name already exists in the database! Please enter another name.");
+                    console.log();
+                    createNewDepartment();
+                } else {
+                    //Run the query to inser the department into the db
+                    connection.query("Insert Into departments Set ?",
+                        [
+                            {
+                                department_name: answer.departmentName,
+                                over_head_costs: answer.overHeadCosts
+                            }
+                        ],
+                        function (err) {
+                            if (err) throw err;
 
-                //Restart the application
-                startApp();
+                            //Display to the user that the insert was successful
+                            console.log();
+                            console.log('\x1b[32m%s\x1b[0m', "=============================================================");
+                            console.log('\x1b[32m%s\x1b[0m', `Successfully added the "${answer.departmentName}" department!`);
+                            console.log('\x1b[32m%s\x1b[0m', "=============================================================");
+                            console.log();
+
+                            //Restart the application
+                            startApp();
+                        });
+                }
             });
     });
 }

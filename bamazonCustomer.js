@@ -27,9 +27,9 @@ connection.connect(function (err) {
 //Function that starts the application
 function startApp() {
     console.log();
-    console.log("=====================");
-    console.log("WELCOME TO BAMAZON!!!");
-    console.log("=====================");
+    console.log('\x1b[36m%s\x1b[0m',"================================");
+    console.log('\x1b[36m%s\x1b[0m',"=== =WELCOME TO BAMAZON!!! =====");
+    console.log('\x1b[36m%s\x1b[0m',"================================");
 
     //Ask user which item they wish to buy
     buyAnItem();
@@ -54,16 +54,16 @@ function buyAnItem() {
 
             //Display items for sale
             console.log();
-            console.log("=======Current Items For Sale=======");
+            console.log('\x1b[32m%s\x1b[0m',"=======Current Items For Sale=======");
             res.forEach((item) => {
                 itemsForSale.push({
                     name: item.product_name,
                     value: item.item_id
                 });
 
-                console.log(`${item.product_name} (Item ID ${item.item_id}): $${item.price}`);
+                console.log('\x1b[34m%s\x1b[0m',`${item.product_name}`, ` (Item ID: ${item.item_id}, Price: $${item.price.toLocaleString('en')})`);
             });
-            console.log("====================================");
+            console.log('\x1b[32m%s\x1b[0m',"====================================");
             console.log();
 
             //Prompt user to select an item to buy
@@ -96,7 +96,7 @@ function buyAnItem() {
                 }
                 //If there is not enough quantity of the item then display a message letting the user know
                 else {
-                    console.log("Insufficient quantity!");
+                    console.log('\x1b[31m%s\x1b[0m',"Insufficient quantity!");
                     //End the application
                     endApp();
                 }
@@ -124,7 +124,7 @@ function fulfillItemOrder(itemToBuy, quantityToBuy) {
             if (err) throw err;
             //Show the user the total cost of their purchase
             
-            console.log(`Total Cost of Purchase: $${totalCost}`);
+            console.log('\x1b[32m%s\x1b[0m',`Total Cost of Purchase: $${totalCost}`);
 
             //End the application
             endApp();
