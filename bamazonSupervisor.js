@@ -98,13 +98,14 @@ function viewSalesByDepartment() {
             const tableHeaderData = [];
             const tableRowData = [];
 
-            //Loop through the results
+            //Loop through the department results
             res.forEach((department, index) => {
 
                 const departmentArray = [];
 
+                //Loop thru all the keys for this department
                 for (let key in department) {
-                    //If index is 0 then add the column names to the header data array
+                    //If index is 0 (first department retrieved) then build out the header array
                     if (index === 0) {
                         tableHeaderData.push(key);
                     }
@@ -119,7 +120,7 @@ function viewSalesByDepartment() {
 
             //Add the header array to the data array
             data.push(tableHeaderData);
-            //Concat the row data array to the data array
+            //Concat the row array to the data array
             data = data.concat(tableRowData);
 
             //Build the output using the table npm package
