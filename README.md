@@ -8,7 +8,7 @@ This is an Amazon-like storefront with a MySQL database and Node Command Line In
 
 ### Customer CLI
 
-To run the customer CLI type in `node bamazonCustomer.js` in your terminal window. The customer CLI will display a welcome message, the list the items currently for sale, then prompt you to enter the id of the item that you would like to buy and the quantity. It will finally display the total amount of the purchase. 
+To run the customer CLI type in `node bamazonCustomer.js` in your terminal window. The customer CLI will display a welcome message, lists the items currently for sale, then prompts the user to enter the id of the item that you would like to buy and the quantity. It will finally display the total amount of the purchase. 
 
 ![](demo_gifs/bamazonCustomerDemo.gif)
 
@@ -20,7 +20,7 @@ If there is insufficient stock of an item then an alert will be displayed to the
 
 ### Manager CLI
 
-To run the manager CLI type in `node bamazonManager.js` in your terminal window. The manager CLI will then display a welcome message then prompt you to choose a task to perform. The tasks available are "View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product", and "Exit". 
+To run the manager CLI type in `node bamazonManager.js` in your terminal window. The manager CLI will then display a welcome message and prompts the user to choose a task to perform. The tasks available are "View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product", and "Exit". 
 
 #### View Products for Sale
 
@@ -54,7 +54,7 @@ This task will exit the manager CLI.
 
 ### Supervisor CLI
 
-To run the supervisor CLI type in `node bamazonSupervisor.js` in your terminal window. The supervisor CLI will then display a welcome message then prompt you to choose a task to perform. The tasks available are "View Product Sales by Department", "Create New Department", and "Exit". 
+To run the supervisor CLI type in `node bamazonSupervisor.js` in your terminal window. The supervisor CLI will then display a welcome message and prompt the user to choose a task to perform. The tasks available are "View Product Sales by Department", "Create New Department", and "Exit". 
 
 #### View Product Sales by Department
 
