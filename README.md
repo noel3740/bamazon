@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is an Amazon-like storefront with a MySQL database and Node Command Line Interface (CLI). The app will take in orders from customers and deplete stock from the store's inventory. There will also be a manager to view product sales and manage inventory and a supervisor CLI to view sales by department and create new departments. 
+This is an Amazon-like storefront with a MySQL database and Node Command Line Interface (CLI). The app will take in orders from customers and deplete stock from the store's inventory. There will also be a manager CLI to view product sales and manage inventory and a supervisor CLI to view sales by department and create new departments. 
 
 ---
 
