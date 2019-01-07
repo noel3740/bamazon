@@ -64,7 +64,7 @@ function buyAnItem() {
                     value: item.item_id
                 });
 
-                console.log('\x1b[34m%s\x1b[0m',`${item.product_name}`, ` (Item ID: ${item.item_id}, Price: $${item.price.toLocaleString('en')})`);
+                console.log('\x1b[35m%s\x1b[0m',`${item.product_name}`, ` (Item ID: ${item.item_id}, Price: $${item.price.toLocaleString('en')})`);
             });
             console.log('\x1b[32m%s\x1b[0m',"====================================");
             console.log();
